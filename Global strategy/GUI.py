@@ -10,11 +10,13 @@ class Button():
         self.base_bg = base_bg
         self.hover_bg = hover_bg
         self.padding = padding
+
         self.text_base = self.font.render(self.text_input, True, self.base_colour)
         self.text_hover = self.font.render(self.text_input, True, self.hover_colour)
         self.text = self.text_base
         width = self.text.get_width() + 2*self.padding[0]
         height = self.text.get_height() + 2*self.padding[1]
+        
         if image:
             self.image = image
             self.using_image = True

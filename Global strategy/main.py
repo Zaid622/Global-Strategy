@@ -3,18 +3,23 @@ import sys
 from game import Game
 from GUI import Button
 pygame.init()
+
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("cambria", 60)
+
 play_img = pygame.image.load("assets/Play Rect.png").convert_alpha()
 quit_img = pygame.image.load("assets/Quit Rect.png").convert_alpha()
+
 play_button = Button("Play", (640, 300), font, "white", "blue", image=play_img)
 quit_button = Button("Quit", (640, 450), font, "white", "red", image=quit_img)
 continue_button = Button("Continue", (640, 300), font, "white", "blue", image=play_img)
 newgame_button = Button("New Game", (640, 420), font, "white", "blue", image=play_img)
 return_button = Button("Return", (640, 540), font, "white", "red", image=quit_img)
+
 menu_buttons = [play_button, quit_button]
 option_buttons = [continue_button,newgame_button,return_button]
+
 def draw_menu():
     screen.fill("black")
     text = font.render("MAIN MENU", True, "white")
@@ -41,7 +46,7 @@ def main():
             if state == "menu":
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if play_button.rect.collidepoint(mouse_pos):
-                        game = Game(screen, clock, 1280, 720)
+                        game = Game(screen, clock)
                         state = "game"
                     elif quit_button.rect.collidepoint(mouse_pos):
                         pygame.quit()
@@ -57,7 +62,7 @@ def main():
                     if continue_button.rect.collidepoint(mouse_pos):
                         state = "game"
                     elif newgame_button.rect.collidepoint(mouse_pos):
-                        game = Game(screen, clock, 1280, 720)
+                        game = Game(screen, clock)
                         state = "game"
                     elif return_button.rect.collidepoint(mouse_pos):
                         state = "menu"

@@ -19,6 +19,7 @@ class Map:
         self.get_adjacent()
         self.get_units()
 
+#converting longitude and latitude into screen coordinates
     def get_countries(self):
         for name,coords in self.country_data.items():
           map_coords = []
@@ -58,6 +59,7 @@ class Map:
       for country in self.countries.values():
         country.units = starting_units[country.name]
 
+#adding adjacent countries which do not intersect
     def add_adjacent_countries(self,country,adjacent):
         if country == "United Kingdom":
             adjacent += ["Ireland", "France", "Iceland"]
@@ -79,6 +81,7 @@ class Map:
             adjacent += ["Finland"]
         return adjacent
 
+#storing adjacent countries through checking if their polygons intersect
     def create_adjacent_countries(self, country):
         adjacent = []
         country_polygon = self.countries[country].polygon
@@ -88,5 +91,4 @@ class Map:
                     adjacent.append(name)
         adjacent = self.add_adjacent_countries(country,adjacent)
         return list(set(adjacent))
-
             

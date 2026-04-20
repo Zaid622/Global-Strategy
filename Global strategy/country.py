@@ -12,6 +12,7 @@ class Country:
         self.attack_cooldown = 0
         self.adjacent = []
     
+#getting screen coordinates by subtracting camera value from the coordinates
     def get_coordinates(self,scroll):
         points = []
         for coord in self.position:
@@ -30,6 +31,7 @@ class Country:
         else:
           return self.colour 
 
+#drawing country polygon along with the country outline/border
     def draw(self, screen, scroll, player, enemy):
         colour = self.get_colour(player,enemy)
         pygame.draw.polygon(screen,colour,self.get_coordinates(scroll))

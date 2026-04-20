@@ -5,26 +5,31 @@ from GUI import Sidebar
 from player import Player, AI
 
 class Game:
-    def __init__(self, screen, clock, width, height):
+    def __init__(self, screen, clock):
         self.screen = screen
         self.clock = clock
-        self.window_size = pygame.Vector2(width, height)
         self.font = pygame.font.SysFont(None, 35)
+
         self.world = Map()
         self.player_country, self.enemy_country = None, None
         self.player, self.enemy = None, None
+
         self.attack_start_time, self.attack_duration = 0, 4000
         self.incoming_attack = None
         self.attack_result, self.result_start_time, self.result_duration = None, 0, 2000
+
         self.move_from = None 
+        self.move_text, self.move_text_time = None, 0
+
         self.selected_country, self.attacking_country = None, None
         self.last_income_time = pygame.time.get_ticks()
+
         self.sidebar = Sidebar(pos=(1000, 0), width=280, height=720, font=self.font)
         self.player_sidebar = Sidebar(pos=(0,40), width=250, height=640, font=self.font)
         self.player_sidebar_visible = False
         self.update_sidebar()
+
         self.game_result = None
-        self.move_text, self.move_text_time = None, 0
         self.state = "setup"
         self.setup_mode = "player"
 
@@ -64,6 +69,7 @@ class Game:
                 self.sidebar.add_button("Attack", self.enter_attack)
                 self.sidebar.add_button("Move Units", self.enter_move)
    
+#game ends when player captures all territories or loses all territories
     def check_win(self):
         if len(self.player.territories) == len(self.world.countries):
             self.state = "game_over"
@@ -74,6 +80,7 @@ class Game:
             self.game_result = "lose"
             self.end_time = pygame.time.get_ticks()
 
+#enters attack when attack button is clicked
     def enter_attack(self):
         if self.selected_country in self.player.territories:
             self.state = "select_attack"
@@ -81,12 +88,14 @@ class Game:
             self.highlight()
             self.update_sidebar()
 
+#enters move mode when move units button clicked
     def enter_move(self):
         if self.selected_country in self.player.territories:
             self.state = "moving"
             self.move_from = self.selected_country
             self.highlight()
 
+#handles events based on state of the game
     def handle_event(self,event):
             if self.state == "setup":
                 self.handle_setup(event)
@@ -111,6 +120,7 @@ class Game:
                       clicked_country = country
                       self.handle_country_click(clicked_country)
 
+#allows player to choose starting countries
     def handle_setup(self, event):
         if event.type != pygame.MOUSEBUTTONDOWN:
             return
@@ -128,7 +138,8 @@ class Game:
                         self.enemy_country = country
                         self.enemy = AI(country, playstyle="aggressive")
                         self.state = "play"
-            
+
+#moves half the units from original to clicked country from player countries           
     def handle_move(self,clicked_country):
         if self.move_from:
             if clicked_country in self.player.territories:
@@ -143,6 +154,7 @@ class Game:
             self.remove_highlight()
             self.update_sidebar()
 
+#changes state to attacking and creates an incoming attack
     def handle_attack(self, clicked_country):
          if self.attacking_country:
             if clicked_country.name in self.attacking_country.adjacent:
@@ -172,7 +184,8 @@ class Game:
         self.remove_highlight()
         self.update_sidebar()
         self.state = "play"
-    
+
+#handles player clicking countries on map  
     def handle_country_click(self, clicked_country):
         if self.selected_country == clicked_country:
             self.deselect_country()
